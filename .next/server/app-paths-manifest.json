@@ -1,0 +1,12 @@
+{
+  "/not-found": "app/not-found.js",
+  "/auth/forgot-password/page": "app/auth/forgot-password/page.js",
+  "/history/page": "app/history/page.js",
+  "/check-suitability/page": "app/check-suitability/page.js",
+  "/auth/signin/page": "app/auth/signin/page.js",
+  "/check-interactions/page": "app/check-interactions/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/analyze-interactions/route": "app/api/analyze-interactions/route.js",
+  "/api/user/history/route": "app/api/user/history/route.js",
+  "/page": "app/page.js"
+}
