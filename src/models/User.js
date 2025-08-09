@@ -11,13 +11,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
   },
+  name: String,
+  dateOfBirth: String,
+  phone: String,
+  address: String,
+  medicalHistory: String,
+  image: String,
   resetToken: String,
   resetTokenExpiry: Date,
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  name: String,
   history: [{
     type: {
       type: String,

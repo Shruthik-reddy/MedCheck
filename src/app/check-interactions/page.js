@@ -78,7 +78,7 @@ export default function DrugInteractionsPage() {
   const getSeverityColor = (severity) => {
     switch (severity.toLowerCase()) {
       case 'high': return 'text-red-600';
-      case 'medium': return 'text-yellow-600';
+      case 'moderate': return 'text-yellow-600';
       case 'low': return 'text-green-600';
       default: return 'text-gray-600';
     }
@@ -170,61 +170,47 @@ export default function DrugInteractionsPage() {
         </form>
 
         {results && (
-          <div className="mt-8 space-y-6">
-            <h2 className="text-2xl font-bold">Results</h2>
-            
-            <div className="space-y-4">
-              {results.interactions.map((interaction, index) => (
-                <div key={index} className="p-4 bg-white shadow rounded">
-                  <h3 className="font-semibold">
-                    {interaction.medications.join(' + ')}
-                  </h3>
-                  <p className={`font-medium ${getSeverityColor(interaction.severity)}`}>
-                    Severity: {interaction.severity}
-                  </p>
-                  <p className="mt-2">{interaction.description}</p>
-                  {interaction.recommendations.length > 0 && (
-                    <div className="mt-2">
-                      <h4 className="font-medium">Recommendations:</h4>
-                      <ul className="list-disc pl-5">
-                        {interaction.recommendations.map((rec, idx) => (
-                          <li key={idx}>{rec}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
+          <div className="space-y-4">
             <div className="p-4 bg-white shadow rounded">
-              <h3 className="font-semibold">Overall Assessment</h3>
-              <p className="mt-2">{results.overallAssessment}</p>
-            </div>
+              <h3 className="font-semibold text">
+                {medications[0]} + {medications[1]}
+              </h3>
+              <h3 className={`font-bold mt-1 ${getSeverityColor(results.severity)}`}>
+                Severity : {results.severity}
+              </h3>
 
-            {results.alternativeOptions.length > 0 && (
+              <p className="mt-2">{results.effects}</p>
+
+              {results.recommendations && results.recommendations.length > 0 && (
+                <div className="mt-3">
+                  <h4 className="font-semibold">Recommendations:</h4>
+                  <ul className="list-disc list-inside">
+                    {results.recommendations.map((rec, idx) => (
+                      <li key={idx}>{rec}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            {results.alternatives && results.alternatives.length > 0 && (
               <div className="p-4 bg-white shadow rounded">
-                <h3 className="font-semibold">Alternative Options</h3>
-                <ul className="list-disc pl-5 mt-2">
-                  {results.alternativeOptions.map((option, index) => (
-                    <li key={index}>{option}</li>
+                <h3 className="font-semibold">Alternative Medications</h3>
+                <ul className="list-disc list-inside">
+                  {results.alternatives.map((alt, idx) => (
+                    <li key={idx}>{alt}</li>
                   ))}
                 </ul>
               </div>
             )}
-
-            {results.precautions.length > 0 && (
+            {results.overallAssessment && (
               <div className="p-4 bg-white shadow rounded">
-                <h3 className="font-semibold">Precautions</h3>
-                <ul className="list-disc pl-5 mt-2">
-                  {results.precautions.map((precaution, index) => (
-                    <li key={index}>{precaution}</li>
-                  ))}
-                </ul>
+                <h3 className="font-semibold">Overall Assessment</h3>
+                <p>{results.overallAssessment}</p>
               </div>
             )}
           </div>
         )}
+
 
         <div className="mt-8 p-4 bg-yellow-50 text-yellow-800 rounded">
           <p className="font-medium">Medical Disclaimer</p>

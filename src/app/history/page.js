@@ -22,14 +22,11 @@ export default function History() {
 
   const fetchHistory = async () => {
     try {
-      console.log('Fetching history...');
       const response = await fetch('/api/user/history');
-      console.log('History response status:', response.status);
       if (!response.ok) {
         throw new Error('Failed to fetch history');
       }
       const data = await response.json();
-      console.log('History data received:', data);
       setHistory(data.history || []);
     } catch (err) {
       console.error('Error fetching history:', err);
@@ -97,16 +94,16 @@ export default function History() {
                               <span className="font-medium">Medications checked: </span>
                               {item.details.medications?.join(', ')}
                             </p>
-                            {item.details.severity && (
+                            {item.details.results?.severity && (
                               <p className="text-sm text-gray-600 mt-1">
                                 <span className="font-medium">Severity: </span>
                                 <span className={`
-                                  ${item.details.severity === 'high' ? 'text-red-600' : ''}
-                                  ${item.details.severity === 'moderate' ? 'text-yellow-600' : ''}
-                                  ${item.details.severity === 'low' ? 'text-blue-600' : ''}
-                                  ${item.details.severity === 'none' ? 'text-green-600' : ''}
+                                  ${item.details.results.severity === 'high' ? 'text-red-600' : ''}
+                                  ${item.details.results.severity === 'moderate' ? 'text-yellow-600' : ''}
+                                  ${item.details.results.severity === 'low' ? 'text-blue-600' : ''}
+                                  ${item.details.results.severity === 'none' ? 'text-green-600' : ''}
                                 `}>
-                                  {item.details.severity.charAt(0).toUpperCase() + item.details.severity.slice(1)}
+                                  {item.details.results.severity.charAt(0).toUpperCase() + item.details.results.severity.slice(1)}
                                 </span>
                               </p>
                             )}
@@ -121,6 +118,12 @@ export default function History() {
                               <p className="text-sm text-gray-600 mt-1">
                                 <span className="font-medium">Conditions: </span>
                                 {item.details.conditions.join(', ')}
+                              </p>
+                            )}
+                            {item.details.results?.suitabilityScore && (
+                              <p className="text-sm text-gray-600 mt-1">
+                                <span className="font-medium">Suitability Score: </span>
+                                {item.details.results.suitabilityScore}/100
                               </p>
                             )}
                           </>

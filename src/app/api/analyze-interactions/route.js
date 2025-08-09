@@ -10,7 +10,7 @@ async function queryLlama(prompt) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: "llama3.2",  // Updated to match installed model
+      model: "llama3.2",
       prompt: prompt,
       stream: false
     })
@@ -21,16 +21,15 @@ async function queryLlama(prompt) {
   }
 
   const data = await response.json();
-  console.log('Raw Llama response:', data.response); // Debug log
+  console.log('Raw Llama response:', data.response);
 
-  // Try to extract JSON from the response
   try {
     const jsonMatch = data.response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No JSON found in response');
     }
     const jsonResponse = JSON.parse(jsonMatch[0]);
-    console.log('Parsed JSON:', jsonResponse); // Debug log
+    console.log('Parsed JSON:', jsonResponse);
     return jsonResponse;
   } catch (error) {
     console.error('JSON parsing error:', error);
@@ -40,24 +39,20 @@ async function queryLlama(prompt) {
 
 export async function POST(request) {
   try {
-    console.log('Starting interaction analysis...'); // Debug log
+    console.log('Starting interaction analysis...');
 
-    // Check authentication
     const session = await getServerSession();
     if (!session) {
-      console.log('Unauthorized: No session found'); // Debug log
+      console.log('Unauthorized: No session found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Connect to database
     await dbConnect();
-    console.log('Connected to database'); // Debug log
+    console.log('Connected to database');
 
-    // Get request body
     const { medications, conditions } = await request.json();
-    console.log('Request data:', { medications, conditions }); // Debug log
+    console.log('Request data:', { medications, conditions });
 
-    // Validate input
     if (!medications || medications.length < 2) {
       return NextResponse.json(
         { error: 'At least two medications are required' },
@@ -65,45 +60,36 @@ export async function POST(request) {
       );
     }
 
-    // Filter out empty values
     const validMedications = medications.filter(med => med.trim() !== '');
     const validConditions = conditions ? conditions.filter(cond => cond.trim() !== '') : [];
 
-    // Prepare prompt
     const prompt = `
       You are a medical AI assistant. Analyze the interactions between these medications:
-      ${validMedications.join(', ')}
-      ${validConditions.length > 0 ? `\nConsidering these conditions: ${validConditions.join(', ')}` : ''}
+      
+      Medications: ${validMedications.join(', ')}
+      ${validConditions.length > 0 ? `Medical Conditions: ${validConditions.join(', ')}` : ''}
 
       Provide your response in this exact JSON format:
       {
-        "interactions": [
-          {
-            "medications": ["drug1", "drug2"],
-            "severity": "high|medium|low",
-            "description": "Description of the interaction",
-            "recommendations": ["recommendation1", "recommendation2"]
-          }
-        ],
-        "overallAssessment": "Overall assessment of all interactions",
-        "alternativeOptions": ["alternative1", "alternative2"],
-        "precautions": ["precaution1", "precaution2"]
+        "hasInteraction": boolean,
+        "severity": "none" | "low" | "moderate" | "high",
+        "effects": "detailed explanation of findings, including safety information in 2 to 3 sentences",
+        "alternatives": ["alternative1", "alternative2"] or [] if no alternatives needed,
+        "recommendations": ["recommendation1", "recommendation2"],
+        "overallAssessment": "short overall assessment of the result in single sentence"
       }
 
       Important: Your entire response must be valid JSON that matches this exact structure.
     `;
 
-    console.log('Sending prompt to Llama...'); // Debug log
+    console.log('Sending prompt to Llama...');
 
-    // Get response from Llama
     const response = await queryLlama(prompt);
-    console.log('Got response from Llama'); // Debug log
+    console.log('Got response from Llama');
 
-    // Save to user's history
     console.log('Attempting to find user with ID:', session.user.id);
     let user = await User.findById(session.user.id);
     
-    // If not found by ID, try email
     if (!user) {
       console.log('User not found by ID, trying email:', session.user.email);
       user = await User.findOne({ email: session.user.email });

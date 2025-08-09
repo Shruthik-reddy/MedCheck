@@ -1,6 +1,7 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
+// Re-enable NextAuth middleware for proper session management
 export default withAuth(
   function middleware(req) {
     return NextResponse.next();
@@ -21,5 +22,8 @@ export const config = {
     '/dashboard',
     '/check-interactions',
     '/check-suitability',
+    '/profile/:path*',
+    '/settings/:path*',
+    '/api/user/:path*',
   ],
 };

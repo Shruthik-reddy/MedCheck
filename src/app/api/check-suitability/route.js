@@ -39,25 +39,20 @@ async function queryOllama(prompt, systemPrompt = '') {
 
 export async function POST(request) {
   try {
-    console.log('Starting medication suitability check...'); // Debug log
+    console.log('Starting medication suitability check...');
 
-    // Check authentication
     const session = await getServerSession();
-    console.log('Full session:', session); // Log the entire session
     if (!session) {
       console.log('Unauthorized: No session found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Connect to database
     await dbConnect();
     console.log('Connected to database');
 
-    // Get request body
     const { medication, conditions, symptoms, allergies, currentMedications } = await request.json();
     console.log('Request data:', { medication, conditions, symptoms, allergies, currentMedications });
 
-    // Validate input
     if (!medication || !conditions || conditions.length === 0) {
       return NextResponse.json(
         { error: 'Medication and at least one condition are required' },
@@ -65,11 +60,9 @@ export async function POST(request) {
       );
     }
 
-    // Filter out empty values
     const validConditions = conditions.filter(cond => cond.trim() !== '');
     const validCurrentMeds = currentMedications ? currentMedications.filter(med => med.trim() !== '') : [];
 
-    // Prepare prompt
     const systemPrompt = `You are a medical AI assistant specializing in medication suitability and safety. Provide thorough, evidence-based assessments while maintaining clear and understandable explanations.`;
 
     const prompt = `
@@ -100,15 +93,12 @@ export async function POST(request) {
       - Relevance to current symptoms
     `;
 
-    // Get response from Llama
     const response = await queryOllama(prompt, systemPrompt);
-    console.log('Got response from Llama'); // Debug log
+    console.log('Got response from Llama');
 
-    // Save to user's history
     console.log('Attempting to find user with ID:', session.user.id);
     let user = await User.findById(session.user.id);
     
-    // If not found by ID, try email
     if (!user) {
       console.log('User not found by ID, trying email:', session.user.email);
       user = await User.findOne({ email: session.user.email });

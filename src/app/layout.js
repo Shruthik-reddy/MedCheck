@@ -1,3 +1,4 @@
+import './globals.css';
 import Navbar from '../components/navigation/Navbar';
 import { AuthProvider } from '../components/auth/provider';
 
@@ -9,9 +10,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <script src="https://cdn.tailwindcss.com"></script>
-      </head>
       <body>
         <AuthProvider>
           <Navbar />

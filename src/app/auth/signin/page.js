@@ -28,21 +28,29 @@ export default function SignIn() {
     setLoading(true);
 
     try {
+      console.log('Attempting sign in with:', formData.email);
+      
       const result = await signIn('credentials', {
-        redirect: false,
         email: formData.email,
         password: formData.password,
+        redirect: false,
       });
 
-      if (result.error) {
-        throw new Error(result.error);
-      }
+      console.log('SignIn result:', result);
 
-      // Redirect to dashboard after successful sign in
-      router.push('/dashboard');
-      router.refresh();
+      if (result?.error) {
+        console.log('SignIn error:', result.error);
+        setError('Invalid credentials: ' + result.error);
+      } else if (result?.ok) {
+        console.log('Sign in successful!');
+        window.location.href = '/dashboard';
+      } else {
+        console.log('Unknown result:', result);
+        setError('Sign in failed - unknown error');
+      }
     } catch (err) {
-      setError(err.message);
+      console.error('SignIn catch error:', err);
+      setError('Sign in failed: ' + err.message);
     } finally {
       setLoading(false);
     }

@@ -326,6 +326,14 @@ export default function CheckSuitability() {
             )}
           </div>
         </div>
+        <div className="mt-8 p-4 bg-yellow-50 text-yellow-800 rounded">
+          <p className="font-medium">Medical Disclaimer</p>
+          <p className="mt-2">
+            This tool is for informational purposes only. Always consult with a qualified healthcare 
+            provider about your medications and medical conditions. The information provided should not 
+            be used as a substitute for professional medical advice, diagnosis, or treatment.
+          </p>
+        </div>
       </div>
     </RequireAuth>
   );
