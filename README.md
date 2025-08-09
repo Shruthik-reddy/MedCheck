@@ -2,6 +2,16 @@
 
 A comprehensive web application built with [Next.js](https://nextjs.org) that helps healthcare professionals and patients check drug interactions and medication suitability using AI. This tool leverages the power of large language models through Ollama to provide intelligent analysis of medication combinations and their suitability for specific medical conditions.
 
+**MedCheck Demo**
+![MedCheck_Demo](public/images/Demo1.gif)
+
+**Check Interactions**
+![Check_Interactions](public/images/check_interactions.gif)
+
+**Medication Suitability**
+![Medication_Suitability](public/images/suitability_analysis.gif)
+
+
 ## Features
 
 - **Drug Interaction Analysis**: Check potential interactions between multiple medications
