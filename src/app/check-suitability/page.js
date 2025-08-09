@@ -326,7 +326,7 @@ export default function CheckSuitability() {
             )}
           </div>
         </div>
-        <div className="mt-8 p-4 bg-yellow-50 text-yellow-800 rounded">
+        <div className="mt-8 p-4 bg-yellow-50 text-yellow-800 rounded max-w-4xl mx-auto">
           <p className="font-medium">Medical Disclaimer</p>
           <p className="mt-2">
             This tool is for informational purposes only. Always consult with a qualified healthcare 
